@@ -26,9 +26,11 @@ import com.rey.material.widget.CheckBox;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mycode.finalproject.Model.User;
 import org.mycode.finalproject.Prevalent.Prevalent;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import io.paperdb.Paper;
 
@@ -92,9 +94,25 @@ public class loginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     Log.i("VOLLEY", response);
+
                     Toast.makeText(loginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
+                    User userData = new User();
                     Intent intent = new Intent(loginActivity.this, HomeActivity.class);
+                    try {
+                      JSONObject resJson = new JSONObject(response);
+
+                      userData.setName(resJson.getString("name"));
+                      userData.setEmail(resJson.getString("email"));
+                      userData.setAdmin(resJson.getBoolean("isAdmin"));
+                      userData.setToken(resJson.getString("token"));
+                      userData.setId(resJson.getString("_id"));
+                      Log.i("user", "SUCCESS");
+                    } catch (JSONException e) {
+                        Log.e("error", "cant parse");
+                        e.printStackTrace();
+                    }
+                    Prevalent.currentOnlineUser = userData;
                     startActivity(intent);
                 }
             }, new Response.ErrorListener() {
@@ -124,7 +142,7 @@ public class loginActivity extends AppCompatActivity {
                 protected Response<String> parseNetworkResponse(NetworkResponse response) {
                     String responseString = "";
                     if (response != null) {
-                        responseString = String.valueOf(response.statusCode);
+                        responseString = new String(response.data, StandardCharsets.UTF_8);
                         // can get more details such as response.headers
                     }
                     return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
