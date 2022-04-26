@@ -22,16 +22,23 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.rey.material.widget.CheckBox;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mycode.finalproject.Prevalent.Prevalent;
 
 import java.io.UnsupportedEncodingException;
+
+import io.paperdb.Paper;
 
 public class loginActivity extends AppCompatActivity {
     private EditText InputEmail , InputPassword ;
     private Button loginButton ;
     private ProgressDialog loadingBar ;
+
+    private String parentDbName = "Users";
+    private CheckBox checkBoxRRememberMe ;
 
 
     @Override
@@ -42,6 +49,9 @@ public class loginActivity extends AppCompatActivity {
         InputEmail = findViewById(R.id.login_email_input);
         InputPassword = findViewById(R.id.login_password_input);
         loadingBar = new ProgressDialog(this );
+
+        checkBoxRRememberMe = findViewById(R.id.remember_me_checkbox);
+        Paper.init(this);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +132,10 @@ public class loginActivity extends AppCompatActivity {
             };
 
             requestQueue.add(stringRequest);
+            if ( checkBoxRRememberMe.isChecked()) {
+                Paper.book().write(Prevalent.UserEmailKey, email);
+                Paper.book().write(Prevalent.UserPasswordKey, password);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
