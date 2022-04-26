@@ -27,53 +27,58 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class loginActivity extends AppCompatActivity {
-    private EditText InputEmail , InputPassword ;
-    private Button loginButton ;
+public class RegisterActivity extends AppCompatActivity {
+
+    public Button CreateAccountButton;
+    private EditText InputName, InputEmails, InputPassword;
     private ProgressDialog loadingBar ;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        loginButton = findViewById(R.id.main_login_btn);
-        InputEmail = findViewById(R.id.login_email_input);
-        InputPassword = findViewById(R.id.login_password_input);
+        setContentView(R.layout.activity_register);
+        CreateAccountButton = findViewById(R.id.register_btn);
+        InputName = findViewById(R.id.register_name_input);
+        InputEmails = findViewById(R.id.register_email_input);
+        InputPassword = findViewById(R.id.register_password_input);
         loadingBar = new ProgressDialog(this );
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        CreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser();
+                CreateAccount();
             }
 
 
         });
-
-
     }
-    private void loginUser() {
-        String email = InputEmail.getText().toString();
+    private void CreateAccount() {
+        String name = InputName.getText().toString();
+        String email = InputEmails.getText().toString();
         String password = InputPassword.getText().toString();
         RequestQueue requestQueue;
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(this,"Please write your name...", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(email)) {
             Toast.makeText(this,"Please write your email...", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this,"Please write your password...", Toast.LENGTH_SHORT).show();
         } else {
-            loadingBar.setTitle("Logging In");
+            loadingBar.setTitle("Create Account");
             loadingBar.setMessage("Please wait...");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
         }
-        String url = "http://192.168.0.13:5000/api/users/login";
+        String url = "http://192.168.0.13:5000/api/users";
         try {
             requestQueue = Volley.newRequestQueue(this);
-            String URL = "https://fs9app.herokuapp.com/api/users/login";
+            String URL = "https://fs9app.herokuapp.com/api/users";
             JSONObject jsonBody = new JSONObject();
+            jsonBody.put("name", name);
             jsonBody.put("email", email);
             jsonBody.put("password", password);
             final String requestBody = jsonBody.toString();
@@ -82,9 +87,9 @@ public class loginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     Log.i("VOLLEY", response);
-                    Toast.makeText(loginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Account successfully created", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
-                    Intent intent = new Intent(loginActivity.this, HomeActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this, loginActivity.class);
                     startActivity(intent);
                 }
             }, new Response.ErrorListener() {
@@ -92,7 +97,7 @@ public class loginActivity extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     Log.e("VOLLEY", error.toString());
                     loadingBar.dismiss();
-                    Toast.makeText(loginActivity.this, "Error: Wrong Info", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Error: Account existed", Toast.LENGTH_SHORT).show();
                 }
             }) {
                 @Override
