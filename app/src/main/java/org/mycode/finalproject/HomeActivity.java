@@ -2,11 +2,24 @@ package org.mycode.finalproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -14,6 +27,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -21,11 +35,22 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.mycode.finalproject.Model.Products;
+import org.mycode.finalproject.Model.User;
 import org.mycode.finalproject.Prevalent.Prevalent;
 import org.mycode.finalproject.databinding.ActivityHomeBinding;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
@@ -35,6 +60,11 @@ public class HomeActivity extends AppCompatActivity
 {
 
     private RecyclerView recyclerView;
+    private CardView cardView ;
+    private GridLayoutManager gridLayoutManager ;
+    private ProductsAdapter productsAdapter ;
+    private List<Products> products_list ;
+
     RecyclerView.LayoutManager layoutManager;
 
 
@@ -42,10 +72,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-
-
-
+        cardView = findViewById(R.id.card_view);
 
         Paper.init(this);
 
@@ -53,6 +80,7 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
+
 
 
         FloatingActionButton fab =  findViewById(R.id.fab);
@@ -86,13 +114,91 @@ public class HomeActivity extends AppCompatActivity
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+
+
     }
 
+    private void fetchAllProducts() {
 
+        RequestQueue requestQueue;
+
+
+        requestQueue = Volley.newRequestQueue(this);
+        String URL = "https://fs9app.herokuapp.com/api/products";
+        JSONObject jsonBody = new JSONObject();
+
+        final String requestBody = jsonBody.toString();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //Log.i("VOLLEY", response);
+                products_list = new ArrayList<>();
+                try {
+                    JSONObject resJson = new JSONObject(response);
+                    JSONArray productListJsonArray = new JSONArray(resJson.getString("products"));
+
+                    for (int i = 0 ; i < productListJsonArray.length(); i++) {
+                        JSONObject productObj = productListJsonArray.getJSONObject(i);
+                        Log.i("OBJ", productObj.toString());
+                        Products product = new Products(productObj.getString("name"), productObj.getString("price"), productObj.getString("description"), productObj.getString("brand"), productObj.getString("category"), productObj.getString("image"), productObj.getString("_id"));
+                        products_list.add(product);
+
+                    }
+                    Log.i("out put", products_list.toString());
+                    productsAdapter = new ProductsAdapter(HomeActivity.this,products_list);
+
+                } catch (JSONException e) {
+                    Log.e("error", "cant parse");
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VOLLEY", error.toString());
+
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
+                }
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                String responseString = "";
+                if (response != null) {
+                    responseString = new String(response.data, StandardCharsets.UTF_8);
+                    // can get more details such as response.headers
+                }
+                return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+            }
+        };
+
+        requestQueue.add(stringRequest);
+
+    }
     @Override
     protected void onStart() {
-
+        gridLayoutManager = new GridLayoutManager(this,2);
+        recyclerView.setLayoutManager(gridLayoutManager);
         super.onStart();
+        fetchAllProducts();
+        recyclerView.setAdapter(productsAdapter);
+
     }
 
     @Override
