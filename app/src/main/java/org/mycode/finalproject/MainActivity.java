@@ -24,6 +24,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mycode.finalproject.Model.User;
 import org.mycode.finalproject.Prevalent.Prevalent;
 
 import java.io.UnsupportedEncodingException;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             jsonBody.put("email", userEmail);
             jsonBody.put("password", userPassword);
             final String requestBody = jsonBody.toString();
+            User userData = new User();
 
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
@@ -91,6 +93,17 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
                     Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    try {
+                        JSONObject resJson = new JSONObject(response);
+                        userData.setName(resJson.getString("name"));
+                        userData.setEmail(resJson.getString("email"));
+                        userData.setAdmin(resJson.getBoolean("isAdmin"));
+                        userData.setToken(resJson.getString("token"));
+                        userData.setId(resJson.getString("_id"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Prevalent.currentOnlineUser = userData ;
                     startActivity(intent);
                 }
             }, new Response.ErrorListener() {
