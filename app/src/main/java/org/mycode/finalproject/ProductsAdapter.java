@@ -50,7 +50,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         holder.txtProductCategory.setText(products_list.get(position).getCategory());
         //Picasso.get().load(products_list.get(position).getImage()).into(holder.productImage);
 
-
     }
 
 
