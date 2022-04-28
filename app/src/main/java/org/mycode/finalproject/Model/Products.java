@@ -68,4 +68,8 @@ public class Products {
     public void setId(String id) {
         this.id = id;
     }
+
+    public void cleanImagePath(String imagePath) {
+
+    }
 }

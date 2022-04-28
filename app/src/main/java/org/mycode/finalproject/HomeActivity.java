@@ -141,13 +141,14 @@ public class HomeActivity extends AppCompatActivity
 
                     for (int i = 0 ; i < productListJsonArray.length(); i++) {
                         JSONObject productObj = productListJsonArray.getJSONObject(i);
-                        Log.i("OBJ", productObj.toString());
                         Products product = new Products(productObj.getString("name"), productObj.getString("price"), productObj.getString("description"), productObj.getString("brand"), productObj.getString("category"), productObj.getString("image"), productObj.getString("_id"));
+                        Log.i("image path", product.getImage());
                         products_list.add(product);
 
                     }
                     Log.i("out put", products_list.toString());
                     productsAdapter = new ProductsAdapter(HomeActivity.this,products_list);
+                    recyclerView.setAdapter(productsAdapter);
 
                 } catch (JSONException e) {
                     Log.e("error", "cant parse");
@@ -193,13 +194,14 @@ public class HomeActivity extends AppCompatActivity
     }
     @Override
     protected void onStart() {
-        gridLayoutManager = new GridLayoutManager(this,2);
+        gridLayoutManager = new GridLayoutManager(this,1);
         recyclerView.setLayoutManager(gridLayoutManager);
         super.onStart();
         fetchAllProducts();
-        recyclerView.setAdapter(productsAdapter);
+
 
     }
+
 
     @Override
     public void onBackPressed() {

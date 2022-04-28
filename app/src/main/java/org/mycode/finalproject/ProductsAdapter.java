@@ -1,6 +1,9 @@
 package org.mycode.finalproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import org.mycode.finalproject.Interface.ItemClickListener;
 import org.mycode.finalproject.Model.Products;
 
+import java.io.File;
 import java.util.List;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
@@ -39,9 +44,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        File imageFile = new File(products_list.get(position).getImage());
         holder.txtProductName.setText(products_list.get(position).getName());
-        Glide.with(context).load(products_list.get(position).getImage()).into(holder.productImage);
+        holder.txtProductPrice.setText(products_list.get(position).getPrice());
+        holder.txtProductCategory.setText(products_list.get(position).getCategory());
+        //Picasso.get().load(products_list.get(position).getImage()).into(holder.productImage);
+
+
     }
+
 
     @Override
     public int getItemCount() {
@@ -50,7 +61,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView txtProductName, txtProductDescription, txtProductPrice;
+        public TextView txtProductName, txtProductCategory, txtProductPrice;
         public ImageView productImage ;
         public ItemClickListener listner ;
         public void setItemClickListenser(ItemClickListener lister) {
@@ -65,7 +76,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             super(itemView);
             productImage = itemView.findViewById(R.id.product_image);
             txtProductName = itemView.findViewById(R.id.product_name);
-            txtProductDescription = itemView.findViewById(R.id.product_description);
+            txtProductCategory = itemView.findViewById(R.id.product_category);
             txtProductPrice = itemView.findViewById(R.id.product_price);
         }
     }
