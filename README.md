@@ -1,5 +1,18 @@
 # android-final-tamk/ E commerce app
 ## This is the final project for Mobile Development 1 Course
-## GUI: Android Studio
-## API: Node JS, Express
-## DataBase: MongoDB
+
+### Description
+  - An ecommerce app based on AliExpress/Amazon.
+### Feature
+  - Loggin and create user
+  - View and Update user profile 
+  - View all the products 
+
+### GUI: Android Studio
+
+### API: Node JS, Express
+
+### DataBase: MongoDB
+
+## Source
+  - GUI: [Coding Cafe] (https://www.youtube.com/watch?v=ZYXsHCK6fpo&list=PLxefhmF0pcPlqmH_VfWneUjfuqhreUz-O&index=4)
