@@ -129,10 +129,6 @@ public class SettingActivity extends AppCompatActivity {
 
                         Prevalent.currentOnlineUser = userData2;
                         startActivity(intent);
-
-
-
-
                     }
                 }, new Response.ErrorListener() {
                     @Override
