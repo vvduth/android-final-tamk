@@ -3,6 +3,10 @@ package org.mycode.finalproject.Model;
 public class Products {
     private String name, price, description, brand, category, image, id ;
 
+    public Products() {
+
+    }
+
     public Products(String name, String price, String description, String brand, String category, String image, String id) {
         this.name = name;
         this.price = price;

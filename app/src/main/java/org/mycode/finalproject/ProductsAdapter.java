@@ -1,6 +1,7 @@
 package org.mycode.finalproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -48,7 +49,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         holder.txtProductName.setText(products_list.get(position).getName());
         holder.txtProductPrice.setText(products_list.get(position).getPrice());
         holder.txtProductCategory.setText(products_list.get(position).getCategory());
-        //Picasso.get().load(products_list.get(position).getImage()).into(holder.productImage);
+        Picasso.get().load("https://fs9app.herokuapp.com" +products_list.get(position).getImage()).into(holder.productImage);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProductDetailsActivity.class);
+                intent.putExtra("_id",products_list.get(holder.getAdapterPosition()).getId());
+                context.startActivity(intent);
+            }
+        });
 
     }
 
