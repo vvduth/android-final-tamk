@@ -45,7 +45,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ElegantNumberButton numberButton ;
     private TextView productPrice, productDescription, productName, countInStock ;
     private int countInStockNumber ;
-    List<Products> userCartTemp = new ArrayList<>();
+    ArrayList<Products> userCartTemp = new ArrayList<>();
     Products oneProductData = new Products() ;
 
 
@@ -86,7 +86,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         //Paper.book().write(Prevalent)
                         userCartTemp.add(newProductToAdd);
                         //Paper.book().write(Prevalent.currentUserCart , userCartTemp);
-                        List<Products> userCartTest = new ArrayList<>();
+                        ArrayList<Products> userCartTest = new ArrayList<>();
                         userCartTest =  Paper.book().read(Prevalent.currentUserCart);
                         userCartTest.add(newProductToAdd);
                         Paper.book().write(Prevalent.currentUserCart , userCartTest);
