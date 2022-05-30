@@ -146,7 +146,7 @@ public class HomeActivity extends AppCompatActivity
                         products_list.add(product);
 
                     }
-                    Log.i("out put", products_list.toString());
+
                     productsAdapter = new ProductsAdapter(HomeActivity.this,products_list);
                     recyclerView.setAdapter(productsAdapter);
 

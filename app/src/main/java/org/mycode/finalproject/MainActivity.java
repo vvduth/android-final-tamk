@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.i("VOLLEY", response);
+
                     Toast.makeText(MainActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
                     Intent intent = new Intent(MainActivity.this, HomeActivity.class);
