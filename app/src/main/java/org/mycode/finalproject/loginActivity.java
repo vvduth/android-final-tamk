@@ -98,7 +98,7 @@ public class loginActivity extends AppCompatActivity {
                     Toast.makeText(loginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
                     User userData = new User();
-                    Intent intent = new Intent(loginActivity.this, HomeActivity.class);
+
                     try {
                       JSONObject resJson = new JSONObject(response);
 
@@ -107,13 +107,15 @@ public class loginActivity extends AppCompatActivity {
                       userData.setAdmin(resJson.getBoolean("isAdmin"));
                       userData.setToken(resJson.getString("token"));
                       userData.setId(resJson.getString("_id"));
-                      Log.i("user", "SUCCESS");
+                        Prevalent.currentOnlineUser = userData;
+                        Intent intent = new Intent(loginActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        Log.i("user", "SUCCESS");
                     } catch (JSONException e) {
                         Log.e("error", "cant parse");
                         e.printStackTrace();
                     }
-                    Prevalent.currentOnlineUser = userData;
-                    startActivity(intent);
+
                 }
             }, new Response.ErrorListener() {
                 @Override

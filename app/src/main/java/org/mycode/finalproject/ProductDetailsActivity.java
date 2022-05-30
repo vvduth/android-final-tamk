@@ -81,18 +81,28 @@ public class ProductDetailsActivity extends AppCompatActivity {
                     try {
                         newProductToAdd = oneProductData.clone();
                         newProductToAdd.setCountInStock(Integer.parseInt(numberButton.getNumber()));
-                        Log.i("order", String.valueOf(newProductToAdd.getCountInStock()));
-                        Log.i("instock", String.valueOf(oneProductData.getCountInStock()));
+                        // Log.i("order", String.valueOf(newProductToAdd.getCountInStock()));
+                        // Log.i("instock", String.valueOf(oneProductData.getCountInStock()));
                         //Paper.book().write(Prevalent)
                         userCartTemp.add(newProductToAdd);
                         //Paper.book().write(Prevalent.currentUserCart , userCartTemp);
                         ArrayList<Products> userCartTest = new ArrayList<>();
                         userCartTest =  Paper.book().read(Prevalent.currentUserCart);
-                        userCartTest.add(newProductToAdd);
-                        Paper.book().write(Prevalent.currentUserCart , userCartTest);
+                        //userCartTest.add(newProductToAdd);
 
-                        Log.i("usercartTest: ", String.valueOf(userCartTest.size()));
-                        Log.i("usercartTemp: ", String.valueOf(userCartTemp.size()));
+                        if (userCartTest == null) {
+                            Paper.book().write(Prevalent.currentUserCart , userCartTemp);
+                        } else {
+                            userCartTest.add(newProductToAdd);
+                            Paper.book().write(Prevalent.currentUserCart , userCartTest);
+                        }
+                        Log.i("usercartTemp ", String.valueOf(userCartTemp));
+                        Log.i("newProductoAdd ", String.valueOf(newProductToAdd));
+                        Log.i("usercartTest ", String.valueOf(userCartTest));
+
+
+                        //Log.i("usercartTest: ", String.valueOf(userCartTest.size()));
+                        //Log.i("usercartTemp: ", String.valueOf(userCartTemp.size()));
                     } catch (CloneNotSupportedException e) {
                         e.printStackTrace();
                     }

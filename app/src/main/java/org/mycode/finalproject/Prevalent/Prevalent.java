@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Prevalent {
-    public static User currentOnlineUser ;
+    public static User currentOnlineUser = new User();
     public static final String UserEmailKey = "UserEmail";
     public static final String UserPasswordKey  = "UserPassword";
     public static final String currentUserCart = "UserCart";

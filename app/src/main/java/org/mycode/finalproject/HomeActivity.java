@@ -107,6 +107,7 @@ public class HomeActivity extends AppCompatActivity
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.profile_image);
 
+        Log.i("curren user","" + Prevalent.currentOnlineUser.getName() );
         userNameTextView.setText(Prevalent.currentOnlineUser.getName());
 
 
@@ -142,7 +143,7 @@ public class HomeActivity extends AppCompatActivity
                     for (int i = 0 ; i < productListJsonArray.length(); i++) {
                         JSONObject productObj = productListJsonArray.getJSONObject(i);
                         Products product = new Products(productObj.getString("name"), productObj.getString("price"), productObj.getString("description"), productObj.getString("brand"), productObj.getString("category"), productObj.getString("image"), productObj.getString("_id"));
-                        Log.i("image path", product.getImage());
+                        //Log.i("image path", product.getImage());
                         products_list.add(product);
 
                     }
