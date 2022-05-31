@@ -7,6 +7,8 @@
   - Loggin and create user
   - View and Update user profile 
   - View all the products 
+  - Add products to cart
+  - View your cart and the total price
 
 ### GUI: Android Studio
 
